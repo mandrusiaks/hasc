@@ -1,10 +1,23 @@
 import json
 import logging
-from datetime import datetime
+from datetime import date
 import aiohttp
 from .const import BASE_API_URL
 
 _LOGGER = logging.getLogger(__name__)
+class Thermostat:
+    def __init__(self, json):
+        self.serial_number = json["SerialNumber"]
+        self.room = json["Room"]
+        self.energy_usage = []
+
+    def update_energy_usage(self, energy_usage):
+        self.energy_usage = energy_usage
+
+class EnergyUsage:
+    def __init__(self, json, time):
+        self.energy_in_kwh = json["EnergyKWattHour"]
+        self.time = time
 
 class MyThermostatApi:
     
@@ -14,15 +27,20 @@ class MyThermostatApi:
         self.username = username
         self.password = password
         self.session_id = ""
-        self.thermostat_ids = []
+        self.thermostats = []
 
-    async def __apiCall(self, request_body, url):
+    async def __apiCall(self, method, url, request_body=None):
         """the actual API caller"""
-        resp = await self.session.post(
-            url=url,
-            data=request_body,
-            headers={"content-type": "application/json"},
-        )
+        resp = None
+        if method == "GET":
+            resp = await self.session.get(url)
+
+        elif method == "POST":
+            resp = await self.session.post(
+                url=url,
+                data=request_body,
+                headers={"content-type": "application/json"},
+            )
         _LOGGER.debug("RESPONSE %s", resp)
         jsonstr = await resp.text()
         _LOGGER.debug("call result: %s", jsonstr)
@@ -38,8 +56,9 @@ class MyThermostatApi:
             "Confirm": "",
             "Application": 8
         }
-        data = await self.__apiCall(
-            request_body, f"{BASE_API_URL}/view/registration/user/checkUser"
+        data = await self.__apiCall("POST",
+         f"{BASE_API_URL}/view/registration/user/checkUser",
+         request_body
         )
 
         if data["message"] == "Invalid Request":
@@ -65,28 +84,49 @@ class MyThermostatApi:
     #     )
     #     return list(data["data"].values())[0]
 
-    # async def get_summary(self):
-    #     """fetches summarized statistics"""
+    async def _get_thermostats(self):
+        """"""
+        try:
+            result = await self.__apiCall(
+                "GET",
+                f"{BASE_API_URL}/thermostats?sessionId={self.session_id}",
+            )
+            _LOGGER.debug("summary result")
+            _LOGGER.debug(result)
+            tstats_json = result["Groups"][0]["Thermostats"]
+            tstats = []
+            for tstat_json in tstats_json:
+                tstats.append(Thermostat(tstat_json))
 
-    #     try:
-    #         request_body = {
-    #             "access_token": self.accessToken,
-    #             "openId": self.openId,
-    #             "language": "en_US",
-    #             "apiuser": API_USER,
-    #             "userId": self.login_result["system"]["user_id"],
-    #         }
-    #         result = await self.__apiCall(
-    #             request_body,
-    #             f"{BASE_API_URL}/view/production/user/getSummaryProductionForEachSystem",
-    #         )
-    #         _LOGGER.debug("summary result")
-    #         _LOGGER.debug(result)
-    #         if result.get("data", False) is False:
-    #             return "no data"
-    #         return list(result["data"].values())[0]
-    #     except Exception as err:
-    #         return "no data"
+            self.thermostats = tstats
+            return tstats
+        except Exception as err:
+            return "no data"
+        
+    async def get_energy_usage(self):
+        await self._get_thermostats()
+
+        today = date.today()
+        today_param = today.strftime("%d/%m/%Y,")
+        for thermostat in self.thermostats:
+            try:
+                result = await self.__apiCall(
+                    "GET",
+                    f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history=10&calc=false&weekstart=monday
+    ",
+                )
+                _LOGGER.debug("summary result")
+                _LOGGER.debug(result)
+                energy_usage_jsons = result["EnergyUsage"]
+                energy_usages = []
+                for index, energy_usage_json in enumerate(energy_usage_jsons):
+                    energy_usages.append(EnergyUsage(energy_usage_json, index))
+
+                thermostat.update_energy_usage(energy_usages)
+            except Exception as err:
+                return "no data"
+            
+        return self.thermostats
 
 #     # necessary calls: login -> getEcuInfo -> this
 #     async def get_production_for_day(self):

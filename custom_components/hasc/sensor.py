@@ -45,6 +45,21 @@ async def async_setup_entry(
     password = config["password"]
     coordinator = MyThermostatApiClientCoordinator(hass, session, username, password)
     await coordinator.async_config_entry_first_refresh()
+    for thermostat in coordinator.api.thermostats:
+        async_add_entities(
+            [
+                MyThermostatApiClientSensor(
+                    coordinator,
+                    thermostat=thermostat,
+                    label=f"Thermostat {thermostat.serial_number}",
+                    dev_class=SensorDeviceClass.ENERGY,
+                    icon="mdi:lightning-bolt",
+                    unit=UnitOfEnergy.KILO_WATT_HOUR,
+                    entity_category=EntityCategory.DIAGNOSTIC,
+                    state_class=SensorStateClass.TOTAL,
+                ),
+            ]
+        )
     # async_add_entities(
     #     [
     #         MyThermostatApiClientSensor(
@@ -142,12 +157,13 @@ async def async_setup_entry(
 
 
 class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
-    """Representation of an APS API client sensor."""
+    """Representation of a sensor."""
 
     def __init__(
         self,
         coordinator,
-        field,
+        # field,
+        thermostat,
         label,
         dev_class,
         icon,
@@ -157,20 +173,25 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
     ):
         """Pass coordinator to CoordinatorEntity."""
         super().__init__(coordinator)
+        energy_usage_total = 0
+        for usage in thermostat.energy_usage:
+            energy_usage_total += usage.energy_in_kwh
+
         self.coordinator = coordinator
+        self.thermostat = thermostat
         self._name = label
-        self._field = "aps_" + field
-        self.field = field
+        # self._field = "ditra_" + field
+        # self.field = field
         self._label = label
-        if not label:
-            self._label = field
+        # if not label:
+        #     self._label = field
         self._dev_class = dev_class
         self._icon = icon
         self._entity_category = entity_category
         self._state_class = state_class
 
         self._unit = unit
-        self._state = self.coordinator.data[self.field]
+        self._state = energy_usage_total # self.coordinator.data[self.field]
         self._available = True
 
     @property
@@ -193,7 +214,10 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self) -> Optional[str]:
-        return self.coordinator.data[self.field]
+        energy_usage_total = 0
+        for usage in self.thermostat.energy_usage:
+            energy_usage_total += usage.energy_in_kwh
+        return energy_usage_total
 
     @property
     def icon(self):
