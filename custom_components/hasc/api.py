@@ -112,8 +112,7 @@ class MyThermostatApi:
             try:
                 result = await self.__apiCall(
                     "GET",
-                    f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history=10&calc=false&weekstart=monday
-    ",
+                    f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history=10&calc=false&weekstart=monday",
                 )
                 _LOGGER.debug("summary result")
                 _LOGGER.debug(result)
