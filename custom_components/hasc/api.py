@@ -106,24 +106,24 @@ class MyThermostatApi:
     async def get_energy_usage(self):
         await self._get_thermostats()
 
-        today = date.today()
-        today_param = today.strftime("%d/%m/%Y,")
-        for thermostat in self.thermostats:
-            try:
-                result = await self.__apiCall(
-                    "GET",
-                    f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history=10&calc=false&weekstart=monday"
-                )
-                _LOGGER.debug("summary result")
-                _LOGGER.debug(result)
-                energy_usage_jsons = result["EnergyUsage"]
-                energy_usages = []
-                for index, energy_usage_json in enumerate(energy_usage_jsons):
-                    energy_usages.append(EnergyUsage(energy_usage_json, index))
+        # today = date.today()
+        # today_param = today.strftime("%d/%m/%Y,")
+        # for thermostat in self.thermostats:
+        #     try:
+        #         result = await self.__apiCall(
+        #             "GET",
+        #             f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history=10&calc=false&weekstart=monday"
+        #         )
+        #         _LOGGER.debug("summary result")
+        #         _LOGGER.debug(result)
+        #         energy_usage_jsons = result["EnergyUsage"]
+        #         energy_usages = []
+        #         for index, energy_usage_json in enumerate(energy_usage_jsons):
+        #             energy_usages.append(EnergyUsage(energy_usage_json, index))
 
-                thermostat.update_energy_usage(energy_usages)
-            except Exception as err:
-                return "no data"
+        #         thermostat.update_energy_usage(energy_usages)
+        #     except Exception as err:
+        #         return "no data"
             
         return self.thermostats
 
