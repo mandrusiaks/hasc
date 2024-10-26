@@ -85,7 +85,7 @@ class MyThermostatApi:
     #     )
     #     return list(data["data"].values())[0]
 
-    async def _get_thermostats(self):
+    async def get_thermostats(self):
         """test"""
         try:
             result = await self.__apiCall(
@@ -106,7 +106,7 @@ class MyThermostatApi:
         
     async def get_energy_usage(self):
         """test"""
-        await self._get_thermostats()
+        # await self._get_thermostats()
 
         today = date.today()
         today_param = today.strftime("%d/%m/%Y,")

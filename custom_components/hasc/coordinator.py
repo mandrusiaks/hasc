@@ -7,6 +7,7 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
     UpdateFailed,
 )
+from homeassistant.const import UnitOfEnergy, UnitOfMass, UnitOfPower
 
 from .api import ApiAuthError, MyThermostatApi
 

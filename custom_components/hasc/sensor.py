@@ -39,29 +39,29 @@ async def async_setup_entry(
     async_add_entities,
 ):
     """Setup sensors from a config entry created in the integrations UI."""
-    config = hass.data[DOMAIN][config_entry.entry_id]
-    session: aiohttp.ClientSession = async_get_clientsession(hass)
-    username = config["username"]
-    password = config["password"]
-    coordinator = MyThermostatApiClientCoordinator(hass, session, username, password)
-    await coordinator.async_config_entry_first_refresh()
-    _LOGGER.debug("CHECK THERMOSTATUS")
-    _LOGGER.debug("%s", len(coordinator.api.thermostats))
-    for thermostat in coordinator.api.thermostats:
-        async_add_entities(
-            [
-                MyThermostatApiClientSensor(
-                    coordinator,
-                    thermostat=thermostat,
-                    label=f"Thermostat {thermostat.serial_number}",
-                    dev_class=SensorDeviceClass.ENERGY,
-                    icon="mdi:lightning-bolt",
-                    unit=UnitOfEnergy.KILO_WATT_HOUR,
-                    entity_category=EntityCategory.DIAGNOSTIC,
-                    state_class=SensorStateClass.TOTAL,
-                ),
-            ]
-        )
+    # config = hass.data[DOMAIN][config_entry.entry_id]
+    # session: aiohttp.ClientSession = async_get_clientsession(hass)
+    # username = config["username"]
+    # password = config["password"]
+    # coordinator = MyThermostatApiClientCoordinator(hass, session, username, password)
+    # await coordinator.async_config_entry_first_refresh()
+    # _LOGGER.debug("CHECK THERMOSTATUS")
+    # _LOGGER.debug("%s", len(coordinator.api.thermostats))
+    # for thermostat in coordinator.api.thermostats:
+    #     async_add_entities(
+    #         [
+    #             MyThermostatApiClientSensor(
+    #                 coordinator,
+    #                 thermostat=thermostat,
+    #                 label=f"Thermostat {thermostat.serial_number}",
+    #                 dev_class=SensorDeviceClass.ENERGY,
+    #                 icon="mdi:lightning-bolt",
+    #                 unit=UnitOfEnergy.KILO_WATT_HOUR,
+    #                 entity_category=EntityCategory.DIAGNOSTIC,
+    #                 state_class=SensorStateClass.TOTAL,
+    #             ),
+    #         ]
+    #     )
     # async_add_entities(
     #     [
     #         MyThermostatApiClientSensor(
