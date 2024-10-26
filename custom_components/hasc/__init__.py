@@ -22,6 +22,6 @@ async def async_setup_entry(
 
 
 async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:
-    """"""
+    """test"""
     hass.data.setdefault(DOMAIN, {})
     return True

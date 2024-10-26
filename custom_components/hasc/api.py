@@ -41,6 +41,7 @@ class MyThermostatApi:
                 data=request_body,
                 headers={"content-type": "application/json"},
             )
+
         _LOGGER.debug("RESPONSE %s", resp)
         jsonstr = await resp.text()
         _LOGGER.debug("call result: %s", jsonstr)
@@ -50,24 +51,24 @@ class MyThermostatApi:
     # all starts here
     async def login(self):
         """logs in to API"""
-        request_body = {
-            "Username": self.username,
-            "Password": self.password,
-            "Confirm": "",
-            "Application": 8
-        }
-        data = await self.__apiCall("POST",
-         f"{BASE_API_URL}/view/registration/user/checkUser",
-         request_body
-        )
+        # request_body = {
+        #     "Username": self.username,
+        #     "Password": self.password,
+        #     "Confirm": "",
+        #     "Application": 8
+        # }
+        # data = await self.__apiCall("POST",
+        #  f"{BASE_API_URL}/view/registration/user/checkUser",
+        #  request_body
+        # )
 
-        if data["message"] == "Invalid Request":
-            raise ApiAuthError("Failed to authenticate")
-        if data["message"] != "Succeed to login":
-            raise ApiAuthError("Unknown error occured")
+        # if data["message"] == "Invalid Request":
+        #     raise ApiAuthError("Failed to authenticate")
+        # if data["message"] != "Succeed to login":
+        #     raise ApiAuthError("Unknown error occured")
 
-        self.session_id = data["SessionId"]
-        return data
+        # self.session_id = data["SessionId"]
+        # return data
 
     # necessary calls: login -> this
     # async def get_ecu_info(self):
@@ -85,7 +86,7 @@ class MyThermostatApi:
     #     return list(data["data"].values())[0]
 
     async def _get_thermostats(self):
-        """"""
+        """test"""
         try:
             result = await self.__apiCall(
                 "GET",
@@ -104,6 +105,7 @@ class MyThermostatApi:
             return "no data"
         
     async def get_energy_usage(self):
+        """test"""
         await self._get_thermostats()
 
         # today = date.today()

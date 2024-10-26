@@ -19,6 +19,7 @@ LOGIN_SCHEMA = vol.Schema({
 })
 
 async def validate_auth(username: str, password: str, hass: core.HomeAssistant) -> None:
+    """test"""
     session = async_get_clientsession(hass)
     try:
         api = MyThermostatApi(session, username, password)
@@ -29,7 +30,7 @@ async def validate_auth(username: str, password: str, hass: core.HomeAssistant) 
 
 
 class MyThermostatApiClientConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """"""
+    """test"""
 
     data: Optional[Dict[str, Any]]
 
