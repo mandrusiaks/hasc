@@ -3,7 +3,7 @@
 import logging
 
 from homeassistant import config_entries, core
-from homeassistant.exceptions import ConfigEntryNotReady, TimeoutException
+from homeassistant.exceptions import ConfigEntryNotReady
 from .const import DOMAIN
 import asyncio
 
@@ -20,7 +20,7 @@ async def async_setup_entry(
     # Forward the setup to the sensor platform.
     try:
         await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
-    except (asyncio.TimeoutError, TimeoutException) as ex:
+    except (asyncio.TimeoutError) as ex:
         raise ConfigEntryNotReady(f"Timeout while connecting") from ex
 
 
