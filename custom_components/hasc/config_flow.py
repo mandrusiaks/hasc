@@ -18,14 +18,6 @@ LOGIN_SCHEMA = vol.Schema({
     vol.Required(CONF_PASSWORD): cv.string,
 })
 
-def validate_path(path: str) -> None:
-    """Validates a GitHub repo path.
-    Raises a ValueError if the path is invalid.
-    """
-    if len(path.split("/")) != 2:
-        raise ValueError
-
-
 async def validate_auth(username: str, password: str, hass: core.HomeAssistant) -> None:
     session = async_get_clientsession(hass)
     try:
@@ -37,7 +29,7 @@ async def validate_auth(username: str, password: str, hass: core.HomeAssistant) 
 
 
 class MyThermostatApiClientConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Github Custom config flow."""
+    """"""
 
     data: Optional[Dict[str, Any]]
 
@@ -55,7 +47,7 @@ class MyThermostatApiClientConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Return the form of the next step.
                 # return await self.async_step_repo()
                 # User is done adding repos, create the config entry.
-                return self.async_create_entry(title="Schluter DITRA API Client", data=self.data)
+                return self.async_create_entry(title="Schluter DITRA Client", data=self.data)
 
         return self.async_show_form(
             step_id="user", data_schema=LOGIN_SCHEMA, errors=errors
