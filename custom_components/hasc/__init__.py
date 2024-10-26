@@ -22,6 +22,6 @@ async def async_setup_entry(
 
 
 async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:
-    """Set up the GitHub Custom component from yaml configuration."""
+    """"""
     hass.data.setdefault(DOMAIN, {})
     return True

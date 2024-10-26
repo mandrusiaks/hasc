@@ -55,7 +55,7 @@ class MyThermostatApiClientConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Return the form of the next step.
                 # return await self.async_step_repo()
                 # User is done adding repos, create the config entry.
-                return self.async_create_entry(title="Schluter DITRA Client", data=self.data)
+                return self.async_create_entry(title="Schluter DITRA API Client", data=self.data)
 
         return self.async_show_form(
             step_id="user", data_schema=LOGIN_SCHEMA, errors=errors

@@ -9,7 +9,7 @@
             "username": "Username",
             "password": "Password"
           },
-          "description": "Enter your APS credentials.",
+          "description": "Enter your Schluter DITRA credentials.",
           "title": "Authentication"
         }
       }
