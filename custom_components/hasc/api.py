@@ -42,7 +42,6 @@ class MyThermostatApi:
                 headers={"content-type": "application/json; charset=utf-8"},
             )
         
-        _LOGGER.debug("call result: %s", resp.json())
         json = await resp.json()
         return json
 
