@@ -44,7 +44,7 @@ async def async_setup_entry(
     username = config["username"]
     password = config["password"]
     coordinator = MyThermostatApiClientCoordinator(hass, session, username, password)
-    # await coordinator.async_config_entry_first_refresh()
+    await coordinator.async_config_entry_first_refresh()
     # _LOGGER.debug("CHECK THERMOSTATUS")
     # _LOGGER.debug("%s", len(coordinator.api.thermostats))
     # for thermostat in coordinator.api.thermostats:
