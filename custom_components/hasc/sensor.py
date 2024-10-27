@@ -52,7 +52,7 @@ async def async_setup_entry(
             [
                 ThermostatDailyUsageSensor(
                     coordinator,
-                    thermostat=thermostat,
+                    thermostat,
                 ),
             ]
         )
@@ -77,10 +77,11 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         self.coordinator = coordinator
         self.thermostat = thermostat
         self._state = energy_usage_total
+        self._available = True
 
     @property
     def unique_id(self):
-        return self.thermostat.serial_number
+        return self.thermostat.serial_number or self.name
 
     @property
     def name(self):
