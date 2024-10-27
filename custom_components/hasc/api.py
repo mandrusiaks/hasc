@@ -43,6 +43,8 @@ class MyThermostatApi:
             )
         
         json = await resp.json()
+        _LOGGER.debug("JSON RESULT")
+        _LOGGER.debug("%s", json)
         return json
 
     # all starts here
