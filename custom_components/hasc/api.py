@@ -58,7 +58,7 @@ class MyThermostatApi:
             "Application": 8
         }
         data = await self.__apiCall("POST",
-         f"{BASE_API_URL}/view/registration/user/checkUser",
+         f"{BASE_API_URL}/authenticate/user",
          request_body
         )
 
@@ -106,7 +106,7 @@ class MyThermostatApi:
         
     async def get_energy_usage(self):
         """test"""
-        # await self._get_thermostats()
+        await self._get_thermostats()
 
         today = date.today()
         today_param = today.strftime("%d/%m/%Y,")
