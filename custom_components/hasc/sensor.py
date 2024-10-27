@@ -99,7 +99,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         return None
 
     @property
-    def native_value(self) -> Optional[str]:
+    def state(self) -> Optional[str]:
         energy_usage_total = 0
         for usage in self.thermostat.energy_usage:
             energy_usage_total += usage.energy_in_kwh
@@ -110,7 +110,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         return "mdi:lightning-bolt"
 
     @property
-    def native_unit_of_measurement(self):
+    def unit_of_measurement(self):
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
