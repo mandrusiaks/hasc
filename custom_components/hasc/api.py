@@ -105,7 +105,7 @@ class MyThermostatApi:
         
     async def get_energy_usage(self):
         """test"""
-        await self._get_thermostats()
+        await self.get_thermostats()
 
         today = date.today()
         today_param = today.strftime("%d/%m/%Y,")
