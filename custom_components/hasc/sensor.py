@@ -69,6 +69,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         super().__init__(coordinator)
         self.coordinator = coordinator
         self.thermostat = thermostat
+        self._icon = "mdi:lightning-bolt"
         self._state_class = SensorStateClass.TOTAL
         self._available = True
 
@@ -99,7 +100,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def icon(self):
-        return "mdi:lightning-bolt"
+        return self._icon
 
     @property
     def unit_of_measurement(self):
