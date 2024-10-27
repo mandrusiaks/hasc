@@ -105,7 +105,12 @@ class MyThermostatApi:
                 energy_usages = []
                 for json in energy_usage_jsons:
                     usage_jsons = json["Usage"]
+                    _LOGGER.debug("GOT USAGE")
+                    _LOGGER.debug(usage_jsons)
                     for index, usage_json in enumerate(usage_jsons):
+                        _LOGGER.debug("ADDING ENERGY USAGE")
+                        _LOGGER.debug(usage_json)
+                        _LOGGER.debug(usage_json["EnergyKWattHour"])
                         energy_usages.append(EnergyUsage(usage_json, index))
 
                 thermostat.update_energy_usage(energy_usages)
