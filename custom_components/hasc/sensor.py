@@ -309,7 +309,7 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def device_class(self):
-        return self._dev_class
+        return SensorDeviceClass.ENERGY
 
     @property
     def last_reset(self):
@@ -326,15 +326,15 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def icon(self):
-        return self._icon
+        return "mdi:lightning-bolt"
 
     @property
     def unit_of_measurement(self):
-        return self._unit
+        return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
     def state_class(self):
-        return self._state_class
+        return SensorStateClass.TOTAL
 
     @property
     def device_info(self):
@@ -345,4 +345,4 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def entity_category(self):
-        return self._entity_category
+        return EntityCategory.DIAGNOSTIC
