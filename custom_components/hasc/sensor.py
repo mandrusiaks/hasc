@@ -326,7 +326,7 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def icon(self):
-        return "mdi:lightning-bolt"
+        return self._icon
 
     @property
     def unit_of_measurement(self):
@@ -334,7 +334,7 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state_class(self):
-        return SensorStateClass.TOTAL
+        return self._state_class
 
     @property
     def device_info(self):
