@@ -39,8 +39,7 @@ class MyThermostatApi:
             _LOGGER.debug("BODY%s", request_body)
             resp = await self.session.post(
                 url=url,
-                json=request_body,
-                headers={"content-type": "application/json; charset=utf-8"},
+                json=request_body
             )
         
         _LOGGER.debug("RESPONSE")
