@@ -5,6 +5,8 @@ import aiohttp
 from .const import BASE_API_URL
 
 _LOGGER = logging.getLogger(__name__)
+DAYS_OF_HISTORY = 6 # 6 + today, so 7 days total including today
+
 class Thermostat:
     def __init__(self, json):
         self.serial_number = json["SerialNumber"]
@@ -115,14 +117,16 @@ class MyThermostatApi:
             try:
                 result = await self.__apiCall(
                     "GET",
-                    f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history=10&calc=false&weekstart=monday"
+                    f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history={DAYS_OF_HISTORY}&calc=false&weekstart=monday"
                 )
                 _LOGGER.debug("summary result")
                 _LOGGER.debug(result)
                 energy_usage_jsons = result["EnergyUsage"]
                 energy_usages = []
-                for index, energy_usage_json in enumerate(energy_usage_jsons):
-                    energy_usages.append(EnergyUsage(energy_usage_json, index))
+                for json in energy_usage_jsons:
+                    usage_jsons = json["Usage"]
+                    for index, usage_json in enumerate(usage_jsons):
+                        energy_usages.append(EnergyUsage(usage_json, index))
 
                 thermostat.update_energy_usage(energy_usages)
             except Exception as err:
