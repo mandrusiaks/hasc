@@ -5,7 +5,7 @@ import aiohttp
 from .const import BASE_API_URL
 
 _LOGGER = logging.getLogger(__name__)
-DAYS_OF_HISTORY = 6 # 6 + today, so 7 days total including today
+DAYS_OF_HISTORY = 0 # 0 + today, so 1 day total including today
 
 class Thermostat:
     def __init__(self, json):
@@ -20,6 +20,7 @@ class EnergyUsage:
     def __init__(self, json, time):
         self.energy_in_kwh = json["EnergyKWattHour"]
         self.time = time
+        self.room = json["Room"]
 
 class MyThermostatApi:
     
@@ -65,28 +66,8 @@ class MyThermostatApi:
          request_body
         )
 
-        # if json["message"] == "Invalid Request":
-        #     raise ApiAuthError("Failed to authenticate")
-        # if json["message"] != "Succeed to login":
-        #     raise ApiAuthError("Unknown error occured")
-
         self.session_id = json["SessionId"]
         return json
-
-    # necessary calls: login -> this
-    # async def get_ecu_info(self):
-    #     """fetches ecu info (we need ecu ID)"""
-    #     request_body = {
-    #         "access_token": self.accessToken,
-    #         "openId": self.openId,
-    #         "language": "en_US",
-    #         "userId": self.login_result["system"]["user_id"],
-    #         "apiuser": API_USER,
-    #     }
-    #     data = await self.__apiCall(
-    #         request_body, f"{BASE_API_URL}/view/registration/ecu/getEcuInfoBelowUser"
-    #     )
-    #     return list(data["data"].values())[0]
 
     async def _get_thermostats(self):
         """test"""
@@ -133,45 +114,6 @@ class MyThermostatApi:
                 return "no data"
             
         return self.thermostats
-
-#     # necessary calls: login -> getEcuInfo -> this
-#     async def get_production_for_day(self):
-#         """fetches production data for a day"""
-#         datestring = datetime.now().strftime("%Y%m%d")
-#         ecudata = await self.get_ecu_info()
-#         request_body = {
-#             "date": datestring,
-#             "access_token": self.accessToken,
-#             "systemId": self.login_result["system"]["system_id"],
-#             "openId": self.openId,
-#             "language": "en_US",
-#             "ecuId": ecudata["ecuId"],
-#             "apiuser": API_USER,
-#         }
-#         result = await self.__apiCall(
-#             request_body, f"{BASE_API_URL}/view/production/ecu/getPowerOnCurrentDay"
-#         )
-#         _LOGGER.debug("productionForDay result")
-#         _LOGGER.debug(result)
-#         return result.get("data", "no data")
-#         # "data":{
-#         #     "duration":123, # ???
-#         #     "total":"12.3456", # kwh
-#         #     "max":"1234.5", # watts
-#         #     ...
-#         #     ],
-#         #     "co2":"12.3456", # kgs
-#         #     "time":[ # timestamp-string[]
-#         #     ...
-#         #     ],
-#         #     "power":[ # watts-string[]
-#         #     ...
-#         #     ],
-#         #     "energy":[ # kwh-string[] (from the last 5 minutes?)
-#         #     ...
-#         #     ]
-#         # },
-
 
 class ApiAuthError(Exception):
     """just a custom error"""

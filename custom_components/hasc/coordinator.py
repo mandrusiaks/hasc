@@ -14,7 +14,7 @@ from .api import ApiAuthError, MyThermostatApi
 _LOGGER = logging.getLogger(__name__)
 
 
-class MyThermostatApiClientCoordinator(DataUpdateCoordinator):
+class ThermostatCoordinator(DataUpdateCoordinator):
     """My custom coordinator."""
 
     def __init__(self, hass, session, username, password):
@@ -40,9 +40,7 @@ class MyThermostatApiClientCoordinator(DataUpdateCoordinator):
             # # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # # handled by the data update coordinator.
             # _LOGGER.warn(f"_async_update_data called!")
-            statistics = {}
             await self.api.login()
-
 
             thermostats = await self.api.get_energy_usage()
 
