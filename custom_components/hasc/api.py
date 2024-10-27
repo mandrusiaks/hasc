@@ -36,7 +36,6 @@ class MyThermostatApi:
             resp = await self.session.get(url)
 
         elif method == "POST":
-            _LOGGER.debug("Body %s", resp)
             resp = await self.session.post(
                 url=url,
                 data=request_body,
@@ -44,7 +43,8 @@ class MyThermostatApi:
             )
         
         _LOGGER.debug("call result: %s", resp.json())
-        return resp.json()
+        json = await resp.json()
+        return json
 
     # all starts here
     async def login(self):
