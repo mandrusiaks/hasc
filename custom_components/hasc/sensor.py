@@ -83,7 +83,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def unique_id(self):
-        return f"thermostat.{self.thermostat.serial_number}"
+        return self.thermostat.serial_number
 
     @property
     def name(self):
@@ -130,5 +130,6 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self.unique_id)},
+            "manufacturer": "Schluter",
             "name": f"{self.thermostat.room} Thermostat",
         }
