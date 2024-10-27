@@ -55,6 +55,8 @@ class MyThermostatApi:
         request_body = {
             "Email": self.username,
             "Password": self.password,
+            "Application": 8,
+            "Confirm": ""
         }
         json = await self.__apiCall("POST",
          f"{BASE_API_URL}/authenticate/user",
