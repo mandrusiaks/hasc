@@ -39,7 +39,7 @@ class MyThermostatApi:
             resp = await self.session.post(
                 url=url,
                 data=request_body,
-                headers={"content-type": "application/json"},
+                headers={"content-type": "application/json; charset=utf-8"},
             )
 
         _LOGGER.debug("RESPONSE %s", resp)
@@ -54,8 +54,6 @@ class MyThermostatApi:
         request_body = {
             "Email": self.username,
             "Password": self.password,
-            "Confirm": "",
-            "Application": 8
         }
         data = await self.__apiCall("POST",
          f"{BASE_API_URL}/authenticate/user",
