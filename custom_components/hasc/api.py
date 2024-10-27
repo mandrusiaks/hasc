@@ -39,15 +39,12 @@ class MyThermostatApi:
             _LOGGER.debug("Body %s", resp)
             resp = await self.session.post(
                 url=url,
-                json=request_body,
+                data=request_body,
                 headers={"content-type": "application/json; charset=utf-8"},
             )
-
-        _LOGGER.debug("RESPONSE %s", resp)
-        jsonstr = await resp.text()
-        _LOGGER.debug("call result: %s", jsonstr)
-        result = json.loads(jsonstr)
-        return result
+        
+        _LOGGER.debug("call result: %s", resp.json())
+        return resp.json()
 
     # all starts here
     async def login(self):
@@ -56,18 +53,18 @@ class MyThermostatApi:
             "Email": self.username,
             "Password": self.password,
         }
-        data = await self.__apiCall("POST",
+        json = await self.__apiCall("POST",
          f"{BASE_API_URL}/authenticate/user",
          request_body
         )
 
-        if data["message"] == "Invalid Request":
-            raise ApiAuthError("Failed to authenticate")
-        if data["message"] != "Succeed to login":
-            raise ApiAuthError("Unknown error occured")
+        # if json["message"] == "Invalid Request":
+        #     raise ApiAuthError("Failed to authenticate")
+        # if json["message"] != "Succeed to login":
+        #     raise ApiAuthError("Unknown error occured")
 
-        self.session_id = data["SessionId"]
-        return data
+        self.session_id = json["SessionId"]
+        return json
 
     # necessary calls: login -> this
     # async def get_ecu_info(self):
