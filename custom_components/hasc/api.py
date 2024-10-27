@@ -20,7 +20,6 @@ class EnergyUsage:
     def __init__(self, json, time):
         self.energy_in_kwh = json["EnergyKWattHour"]
         self.time = time
-        self.room = json["Room"]
 
 class MyThermostatApi:
     
