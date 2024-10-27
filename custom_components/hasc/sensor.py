@@ -85,8 +85,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def name(self):
-        return f"{self.thermostat.room} Thermostat",
-
+        return "Energy Used Today",
 
     @property
     def device_class(self):
@@ -124,3 +123,10 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
     @property 
     def suggested_display_precision(self):
         return 2
+    
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, self.unique_id)},
+            "name": f"{self.thermostat.room} Thermostat",
+        }
