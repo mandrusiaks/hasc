@@ -75,6 +75,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         for usage in thermostat.energy_usage:
             energy_usage_total += usage.energy_in_kwh
 
+        _LOGGER.debug("%s", energy_usage_total)
         self.coordinator = coordinator
         self.thermostat = thermostat
         self._state = energy_usage_total
