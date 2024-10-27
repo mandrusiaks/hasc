@@ -340,7 +340,7 @@ class MyThermostatApiClientSensor(CoordinatorEntity, SensorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self.unique_id)},
-            "name": "Schluter DITRA Client",
+            "name": "Schluter DITRA Client test",
         }
 
     @property
