@@ -99,7 +99,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def last_reset(self):
-        if self._state_class == SensorStateClass.TOTAL:
+        if self.state_class == SensorStateClass.TOTAL:
             return get_todays_midnight()
         return None
 
