@@ -77,12 +77,14 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         self._attr_suggested_display_precision = 2
         self._attr_available = True
         self._attr_state = self.calculate_energy_usage()
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, thermostat.room)},
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, f"{self.thermostat.room}.{self.thermostat.serial_number}")},
             "manufacturer": "Schluter",
             "name": f"{self.thermostat.room} Thermostat",
         }
-
     @property
     def last_reset(self):
         return get_todays_midnight()
