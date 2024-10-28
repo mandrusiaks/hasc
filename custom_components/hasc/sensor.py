@@ -71,7 +71,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         self._attr_icon = "mdi:lightning-bolt"
         self._attr_state_class = SensorStateClass.TOTAL
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
-        self._attr_name = "Energy Used Today"
+        self._attr_name = f"{thermostat.room} Energy Used Today"
         self._attr_device_class = SensorDeviceClass.ENERGY
         self._attr_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
         self._attr_suggested_display_precision = 2
@@ -81,7 +81,7 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, f"{self.thermostat.room}.{self.thermostat.serial_number}")},
+            "identifiers": {(DOMAIN, self.thermostat.serial_number)},
             "manufacturer": "Schluter",
             "name": f"{self.thermostat.room} Thermostat",
         }
