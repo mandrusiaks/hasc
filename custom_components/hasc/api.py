@@ -38,17 +38,12 @@ class MyThermostatApi:
             resp = await self.session.get(url)
 
         elif method == "POST":
-            _LOGGER.debug("BODY%s", request_body)
             resp = await self.session.post(
                 url=url,
                 json=request_body
             )
         
-        _LOGGER.debug("RESPONSE")
-        _LOGGER.debug("%s", resp)
         json = await resp.json()
-        _LOGGER.debug("JSON RESULT")
-        _LOGGER.debug("%s", json)
         return json
 
     # all starts here
@@ -75,8 +70,6 @@ class MyThermostatApi:
                 "GET",
                 f"{BASE_API_URL}/thermostats?sessionId={self.session_id}",
             )
-            _LOGGER.debug("summary result")
-            _LOGGER.debug(result)
             tstats_json = result["Groups"][0]["Thermostats"]
             tstats = []
             for tstat_json in tstats_json:
@@ -99,18 +92,11 @@ class MyThermostatApi:
                     "GET",
                     f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history={DAYS_OF_HISTORY}&calc=false&weekstart=monday"
                 )
-                _LOGGER.debug("summary result")
-                _LOGGER.debug(result)
                 energy_usage_jsons = result["EnergyUsage"]
                 energy_usages = []
                 for json in energy_usage_jsons:
                     usage_jsons = json["Usage"]
-                    _LOGGER.debug("GOT USAGE")
-                    _LOGGER.debug(usage_jsons)
                     for index, usage_json in enumerate(usage_jsons):
-                        _LOGGER.debug("ADDING ENERGY USAGE")
-                        _LOGGER.debug(usage_json)
-                        _LOGGER.debug(usage_json["EnergyKWattHour"])
                         energy_usages.append(EnergyUsage(usage_json, index))
 
                 thermostat.update_energy_usage(energy_usages)
