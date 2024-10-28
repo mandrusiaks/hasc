@@ -73,28 +73,29 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         _LOGGER.debug(thermostat.serial_number)
         _LOGGER.debug(thermostat.room)
         _LOGGER.debug(self.calculate_energy_usage())
-        self._unique_id = thermostat.serial_number
-        self._icon = "mdi:lightning-bolt"
-        self._state_class = SensorStateClass.TOTAL
-        self._state = self.calculate_energy_usage()
-        self._entity_category = EntityCategory.DIAGNOSTIC
-        self._name = "Energy Used Today"
-        self._device_class = SensorDeviceClass.ENERGY
-        self._unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
-        self._suggested_display_precision = 2
-        self._available = True
+        self._attr_unique_id = thermostat.serial_number
+        self._attr_icon = "mdi:lightning-bolt"
+        self._attr_state_class = SensorStateClass.TOTAL
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        self._attr_name = "Energy Used Today"
+        self._attr_device_class = SensorDeviceClass.ENERGY
+        self._attr_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
+        self._attr_suggested_display_precision = 2
+        self._attr_available = True
+        self._attr_state = self.calculate_energy_usage()
 
-    @property
-    def unique_id(self):
-        return self._unique_id
 
-    @property
-    def name(self):
-        return self._name
+    # @property
+    # def unique_id(self):
+    #     return self._unique_id
 
-    @property
-    def device_class(self):
-        return self._device_class
+    # @property
+    # def name(self):
+    #     return self._name
+
+    # @property
+    # def device_class(self):
+    #     return self._device_class
 
     @property
     def last_reset(self):
@@ -106,25 +107,25 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
     def state(self) -> Optional[str]:
         return self.calculate_energy_usage()
 
-    @property
-    def icon(self):
-        return self._icon
+    # @property
+    # def icon(self):
+    #     return self._icon
 
-    @property
-    def unit_of_measurement(self):
-        return self._unit_of_measurement
+    # @property
+    # def unit_of_measurement(self):
+    #     return self._unit_of_measurement
 
-    @property
-    def state_class(self):
-        return self._state_class
+    # @property
+    # def state_class(self):
+    #     return self._state_class
     
-    @property
-    def entity_category(self):
-        return self._entity_category
+    # @property
+    # def entity_category(self):
+    #     return self._entity_category
 
-    @property 
-    def suggested_display_precision(self):
-        return self._suggested_display_precision
+    # @property 
+    # def suggested_display_precision(self):
+    #     return self._suggested_display_precision
     
     @property
     def device_info(self):
