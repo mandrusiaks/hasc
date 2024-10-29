@@ -76,6 +76,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
         super().__init__(coordinator)
         self.coordinator = coordinator
         self.thermostat = thermostat
+        self.energy_type = energy_type
         self._attr_unique_id = thermostat.serial_number
         self._attr_icon = "mdi:lightning-bolt"
         self._attr_state_class = SensorStateClass.TOTAL
@@ -101,7 +102,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self) -> Optional[str]:
-        return self.calculate_energy_usage()
+        return self._calculate_energy_usage(self.energy_type)
 
     def _calculate_energy_usage(self, energy_type):
         number_of_days = 1
