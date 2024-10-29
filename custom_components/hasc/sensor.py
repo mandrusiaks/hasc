@@ -46,7 +46,7 @@ async def async_setup_entry(
     coordinator = ThermostatCoordinator(hass, session, username, password)
     await coordinator.async_config_entry_first_refresh()
     for thermostat in coordinator.api.thermostats:
-        for energy_type in EnergyCalculationLength:
+        for energy_type in EnergyCalculationDuration:
             async_add_entities(
                 [
                     ThermostatSensor(
@@ -57,7 +57,7 @@ async def async_setup_entry(
                 ]
             )
 
-class EnergyCalculationLength(enum):
+class EnergyCalculationDuration(enum.Enum):
     DAY = 1
     WEEK = 2
     MONTH = 3
@@ -104,11 +104,11 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     def _calculate_energy_usage(self, energy_type):
         number_of_days = 1
         match energy_type:
-            case EnergyCalculationLength.DAY:
+            case EnergyCalculationDuration.DAY:
                 number_of_days = 1
-            case EnergyCalculationLength.WEEK:
+            case EnergyCalculationDuration.WEEK:
                 number_of_days = 7
-            case EnergyCalculationLength.MONTH:
+            case EnergyCalculationDuration.MONTH:
                 number_of_days = 30
 
         energy_usage_total = 0
@@ -123,9 +123,9 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     def _get_name(self, energy_type):
         name = self.thermostat.room
         match energy_type:
-            case EnergyCalculationLength.DAY:
+            case EnergyCalculationDuration.DAY:
                 name += " Energy Used Today"
-            case EnergyCalculationLength.WEEK:
+            case EnergyCalculationDuration.WEEK:
                 name += " Energy Used Last 7 Days"
-            case EnergyCalculationLength.MONTH:
+            case EnergyCalculationDuration.MONTH:
                 name += " Energy Used Last 30 Days"
