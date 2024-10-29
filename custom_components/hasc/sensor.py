@@ -48,9 +48,6 @@ async def async_setup_entry(
     for thermostat in coordinator.api.thermostats:
         entities = []
         for energy_type in EnergyCalculationDuration:
-            _LOGGER.debug("ENERGY TYPE")
-            _LOGGER.debug(energy_type)
-            _LOGGER.debug(len(entities))
             entities.append(
                 ThermostatSensor(
                         coordinator,
@@ -88,12 +85,8 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
         self._attr_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
         self._attr_suggested_display_precision = 2
         self._attr_available = True
-
-        self._attr_name = self.get_name(energy_type)
-        _LOGGER.debug("TSTAT")
-        _LOGGER.debug(self._attr_name)
-
-        self._attr_state = self.calculate_energy_usage(energy_type)
+        self._attr_name = self._get_name(energy_type)
+        self._attr_state = self._calculate_energy_usage(energy_type)
 
     @property
     def device_info(self):
@@ -108,9 +101,9 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self) -> Optional[str]:
-        return self.calculate_energy_usage(self.energy_type)
+        return self._calculate_energy_usage(self.energy_type)
 
-    def calculate_energy_usage(self, energy_type):
+    def _calculate_energy_usage(self, energy_type):
         number_of_days = 1
         match energy_type:
             case EnergyCalculationDuration.DAY:
@@ -129,7 +122,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
 
         return energy_usage_total
 
-    def get_name(self, energy_type):
+    def _get_name(self, energy_type):
         name = self.thermostat.room
         match energy_type:
             case EnergyCalculationDuration.DAY:
