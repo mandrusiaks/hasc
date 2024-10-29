@@ -46,14 +46,17 @@ async def async_setup_entry(
     coordinator = ThermostatCoordinator(hass, session, username, password)
     await coordinator.async_config_entry_first_refresh()
     for thermostat in coordinator.api.thermostats:
-        async_add_entities(
-            [
+        for energy_type in ThermostatSensor.EnergyType:
+
+            async_add_entities(
+                [
                 ThermostatSensor(
-                    coordinator,
-                    thermostat,
-                ),
-            ]
-        )
+                        coordinator,
+                        thermostat,
+                        energy_type
+                    ),        
+                ]
+            )
 
 class ThermostatSensor(CoordinatorEntity, SensorEntity):
     """Representation of a sensor."""
