@@ -16,13 +16,12 @@ class Thermostat:
         self.day_energy_usages = day_energy_usages
 
 class DayEnergyUsage:
-    def __init__(self, json, time):
+    def __init__(self, json):
         usage_jsons = json["Usage"]
         hour_usages = []
         for index, usage_json in enumerate(usage_jsons):
             hour_usages.append(HourEnergyUsage(usage_json, index))
         self.hour_usages = hour_usages
-        self.time = time
 
 class HourEnergyUsage:
     def __init__(self, json, time):
