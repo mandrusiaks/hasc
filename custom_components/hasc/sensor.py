@@ -77,9 +77,6 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     ):
         """Pass coordinator to CoordinatorEntity."""
         super().__init__(coordinator)
-        _LOGGER.debug("TSTAT")
-        _LOGGER.debug(len(thermostat.energy_usage))
-        _LOGGER.debug(thermostat.energy_usage)
         self.coordinator = coordinator
         self.thermostat = thermostat
         self.energy_type = energy_type
@@ -92,8 +89,11 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
         self._attr_suggested_display_precision = 2
         self._attr_available = True
 
-        self._attr_name = self._get_name(energy_type)
-        self._attr_state = self._calculate_energy_usage(energy_type)
+        self._attr_name = self.get_name(energy_type)
+        _LOGGER.debug("TSTAT")
+        _LOGGER.debug(self._attr_name)
+
+        self._attr_state = self.calculate_energy_usage(energy_type)
 
     @property
     def device_info(self):
@@ -108,9 +108,9 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self) -> Optional[str]:
-        return self._calculate_energy_usage(self.energy_type)
+        return self.calculate_energy_usage(self.energy_type)
 
-    def _calculate_energy_usage(self, energy_type):
+    def calculate_energy_usage(self, energy_type):
         number_of_days = 1
         match energy_type:
             case EnergyCalculationDuration.DAY:
@@ -129,7 +129,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
 
         return energy_usage_total
 
-    def _get_name(self, energy_type):
+    def get_name(self, energy_type):
         name = self.thermostat.room
         match energy_type:
             case EnergyCalculationDuration.DAY:
