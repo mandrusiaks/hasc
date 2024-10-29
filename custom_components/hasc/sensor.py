@@ -79,8 +79,8 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
         """Pass coordinator to CoordinatorEntity."""
         super().__init__(coordinator)
         _LOGGER.debug("TSTAT")
-        _LOGGER.debug(thermostat.name)
         _LOGGER.debug(len(thermostat.energy_usage))
+        _LOGGER.debug(thermostat.energy_usage)
         self.coordinator = coordinator
         self.thermostat = thermostat
         self.energy_type = energy_type
