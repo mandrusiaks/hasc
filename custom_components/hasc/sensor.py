@@ -48,6 +48,9 @@ async def async_setup_entry(
     for thermostat in coordinator.api.thermostats:
         entities = []
         for energy_type in EnergyCalculationDuration:
+            _LOGGER.debug("ENERGY TYPE")
+            _LOGGER.debug(energy_type)
+            _LOGGER.debug(len(entities))
             entities.append(
                 ThermostatSensor(
                         coordinator,
@@ -75,6 +78,9 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     ):
         """Pass coordinator to CoordinatorEntity."""
         super().__init__(coordinator)
+        _LOGGER.debug("TSTAT")
+        _LOGGER.debug(thermostat.name)
+        _LOGGER.debug(len(thermostat.energy_usage))
         self.coordinator = coordinator
         self.thermostat = thermostat
         self.energy_type = energy_type
@@ -93,7 +99,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, f"{self.thermostat.serial_number}.{self.energy_type.value}")},
+            "identifiers": {(DOMAIN, f"{self.thermostat.serial_number}{self.energy_type.value}")},
             "manufacturer": "Schluter",
             "name": f"{self.thermostat.room} Thermostat",
         }
