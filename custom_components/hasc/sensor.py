@@ -84,7 +84,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
         self.coordinator = coordinator
         self.thermostat = thermostat
         self.energy_type = energy_type
-        self._attr_unique_id = f"{self.thermostat.serial_number}.{self.energy_type.value}"
+        self._attr_unique_id = f"{self.thermostat.serial_number}-{self.energy_type.value}"
         self._attr_icon = "mdi:lightning-bolt"
         self._attr_state_class = SensorStateClass.TOTAL
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
@@ -99,7 +99,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self.thermostat.serial_number)},
+            "identifiers": {(DOMAIN, self.unique_id)},
             "manufacturer": "Schluter",
             "name": f"{self.thermostat.room} Thermostat",
         }
