@@ -46,25 +46,24 @@ async def async_setup_entry(
     coordinator = ThermostatCoordinator(hass, session, username, password)
     await coordinator.async_config_entry_first_refresh()
     for thermostat in coordinator.api.thermostats:
-        for energy_type in ThermostatSensor.EnergyType:
-
+        for energy_type in EnergyCalculationLength:
             async_add_entities(
                 [
-                ThermostatSensor(
-                        coordinator,
-                        thermostat,
-                        energy_type
-                    ),        
+                    ThermostatSensor(
+                            coordinator,
+                            thermostat,
+                            energy_type
+                        ),
                 ]
             )
 
+class EnergyCalculationLength(enum):
+    DAY = 1
+    WEEK = 2
+    MONTH = 3
+
 class ThermostatSensor(CoordinatorEntity, SensorEntity):
     """Representation of a sensor."""
-    class EnergyType(enum):
-        DAY = 1
-        WEEK = 2
-        MONTH = 3
-
     def __init__(
         self,
         coordinator,
@@ -105,11 +104,11 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     def _calculate_energy_usage(self, energy_type):
         number_of_days = 1
         match energy_type:
-            case ThermostatSensor.EnergyType.DAY:
+            case EnergyCalculationLength.DAY:
                 number_of_days = 1
-            case ThermostatSensor.EnergyType.WEEK:
+            case EnergyCalculationLength.WEEK:
                 number_of_days = 7
-            case ThermostatSensor.EnergyType.MONTH:
+            case EnergyCalculationLength.MONTH:
                 number_of_days = 30
 
         energy_usage_total = 0
@@ -124,9 +123,9 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     def _get_name(self, energy_type):
         name = self.thermostat.room
         match energy_type:
-            case ThermostatSensor.EnergyType.DAY:
+            case EnergyCalculationLength.DAY:
                 name += " Energy Used Today"
-            case ThermostatSensor.EnergyType.WEEK:
+            case EnergyCalculationLength.WEEK:
                 name += " Energy Used Last 7 Days"
-            case ThermostatSensor.EnergyType.MONTH:
+            case EnergyCalculationLength.MONTH:
                 name += " Energy Used Last 30 Days"
