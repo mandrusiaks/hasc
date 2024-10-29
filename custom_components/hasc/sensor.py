@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 import logging
 from datetime import timedelta
 from typing import Optional
@@ -57,10 +57,12 @@ async def async_setup_entry(
                 ]
             )
 
-class EnergyCalculationDuration(enum.Enum):
+
+class EnergyCalculationDuration(Enum):
     DAY = 1
     WEEK = 2
     MONTH = 3
+
 
 class ThermostatSensor(CoordinatorEntity, SensorEntity):
     """Representation of a sensor."""
