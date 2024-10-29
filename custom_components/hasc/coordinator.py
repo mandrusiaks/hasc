@@ -44,8 +44,6 @@ class ThermostatCoordinator(DataUpdateCoordinator):
 
             thermostats = await self.api.get_energy_usage()
 
-            _LOGGER.debug("FINAL STATS")
-            _LOGGER.debug(thermostats)
             return thermostats
         except ApiAuthError as err:
             # Raising ConfigEntryAuthFailed will cancel future updates
