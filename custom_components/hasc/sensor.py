@@ -117,7 +117,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
         for index in range(0, number_of_days):
             if index >= len(self.thermostat.day_energy_usages):
                 break
-            hour_usages = self.thermostat.day_energy_usages[index]
+            hour_usages = self.thermostat.day_energy_usages[index].hour_usages
             for usage in hour_usages:
                 energy_usage_total += usage.energy_in_kwh
 
