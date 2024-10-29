@@ -55,7 +55,7 @@ class MyThermostatApi:
 
     # all starts here
     async def login(self):
-        """logs in to API"""
+        """logs in to API."""
         request_body = {
             "Email": self.username,
             "Password": self.password,
