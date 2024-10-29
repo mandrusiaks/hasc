@@ -103,7 +103,7 @@ class MyThermostatApi:
 
                 thermostat.update_energy_usage(energy_usages)
             except Exception as err:
-                _LOGGER.debug("THERMOST ERROR")
+                _LOGGER.debug("THERMOST ERRORs")
                 _LOGGER.debug(err)
                 return "no data"
             
