@@ -115,14 +115,11 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
 
         energy_usage_total = 0
         for index in range(0, number_of_days):
-            _LOGGER.debug("THERMOST USAGE")
-            _LOGGER.debug(len(self.thermostat.energy_usage))
-            _LOGGER.debug(self.thermostat.energy_usage)
-            if index >= len(self.thermostat.energy_usage):
+            if index >= len(self.thermostat.day_energy_usages):
                 break
-            usage = self.thermostat.energy_usage[index]
-            _LOGGER.debug(usage)
-            energy_usage_total += usage.energy_in_kwh
+            hour_usages = self.thermostat.day_energy_usages[index]
+            for usage in hour_usages:
+                energy_usage_total += usage.energy_in_kwh
 
         return energy_usage_total
 

@@ -10,12 +10,21 @@ class Thermostat:
     def __init__(self, json):
         self.serial_number = json["SerialNumber"]
         self.room = json["Room"]
-        self.energy_usage = []
+        self.day_energy_usages = []
 
-    def update_energy_usage(self, energy_usage):
-        self.energy_usage = energy_usage
+    def update_energy_usage(self, day_energy_usages):
+        self.day_energy_usages = day_energy_usages
 
-class EnergyUsage:
+class DayEnergyUsage:
+    def __init__(self, json, time):
+        usage_jsons = json["Usage"]
+        hour_usages = []
+        for index, usage_json in enumerate(usage_jsons):
+            hour_usages.append(HourEnergyUsage(usage_json, index))
+        self.hour_usages = hour_usages
+        self.time = time
+
+class HourEnergyUsage:
     def __init__(self, json, time):
         self.energy_in_kwh = json["EnergyKWattHour"]
         self.time = time
@@ -91,17 +100,13 @@ class MyThermostatApi:
                     "GET",
                     f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history={DAYS_OF_HISTORY}&calc=false&weekstart=monday"
                 )
-                _LOGGER.debug("THERMOST DATA")
-                _LOGGER.debug(len(thermostat.energy_usage))
 
                 energy_usage_jsons = result["EnergyUsage"]
-                energy_usages = []
+                day_energy_usages = []
                 for json in energy_usage_jsons:
-                    usage_jsons = json["Usage"]
-                    for index, usage_json in enumerate(usage_jsons):
-                        energy_usages.append(EnergyUsage(usage_json, index))
+                    day_energy_usages.append(DayEnergyUsage(json, d))
 
-                thermostat.update_energy_usage(energy_usages)
+                thermostat.update_energy_usage(day_energy_usages)
             except Exception as err:
                 _LOGGER.debug("THERMOST ERRORs")
                 _LOGGER.debug(err)
