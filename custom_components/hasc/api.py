@@ -104,7 +104,7 @@ class MyThermostatApi:
                 energy_usage_jsons = result["EnergyUsage"]
                 day_energy_usages = []
                 for json in energy_usage_jsons:
-                    day_energy_usages.append(DayEnergyUsage(json, d))
+                    day_energy_usages.append(DayEnergyUsage(json))
 
                 thermostat.update_energy_usage(day_energy_usages)
             except Exception as err:
