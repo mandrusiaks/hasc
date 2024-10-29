@@ -60,9 +60,9 @@ async def async_setup_entry(
 
 
 class EnergyCalculationDuration(Enum):
-    DAY = 1
-    WEEK = 2
-    MONTH = 3
+    DAY = "Day"
+    WEEK = "Week"
+    MONTH = "Month"
 
 
 class ThermostatSensor(CoordinatorEntity, SensorEntity):
@@ -93,7 +93,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self.thermostat.serial_number)},
+            "identifiers": {(DOMAIN, f"{self.thermostat.serial_number}.{self.energy_type.value}")},
             "manufacturer": "Schluter",
             "name": f"{self.thermostat.room} Thermostat",
         }
