@@ -65,7 +65,7 @@ class EnergyCalculationDuration(Enum):
 
 
 class ThermostatSensor(CoordinatorEntity, SensorEntity):
-    """Representation of a sensor."""
+    """Representation of a sensors."""
     def __init__(
         self,
         coordinator,
