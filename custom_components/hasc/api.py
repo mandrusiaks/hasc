@@ -92,7 +92,7 @@ class MyThermostatApi:
                     f"{BASE_API_URL}/energyusage?sessionId={self.session_id}&serialnumber={thermostat.serial_number}&view=day&date={today_param}&history={DAYS_OF_HISTORY}&calc=false&weekstart=monday"
                 )
                 _LOGGER.debug("THERMOST DATA")
-                _LOGGER.debug(len(self.thermostat.energy_usage))
+                _LOGGER.debug(len(thermostat.energy_usage))
 
                 energy_usage_jsons = result["EnergyUsage"]
                 energy_usages = []
