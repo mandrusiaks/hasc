@@ -138,3 +138,4 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
                 name += " Energy Used Last 7 Days"
             case EnergyCalculationDuration.MONTH:
                 name += " Energy Used Last 30 Days"
+        return name
