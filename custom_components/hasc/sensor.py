@@ -100,7 +100,7 @@ class ThermostatSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self.unique_id)},
+            "identifiers": {(DOMAIN, self.thermostat.serial_number)},
             "manufacturer": "Schluter",
             "name": f"{self.thermostat.room} Thermostat",
         }
