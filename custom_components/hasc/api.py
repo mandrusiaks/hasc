@@ -5,7 +5,7 @@ import aiohttp
 from .const import BASE_API_URL
 
 _LOGGER = logging.getLogger(__name__)
-DAYS_OF_HISTORY = 0 # 0 + today, so 1 day total including today
+DAYS_OF_HISTORY = 29 # 29 + today, so 30 days total including today
 
 class Thermostat:
     def __init__(self, json):

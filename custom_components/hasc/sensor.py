@@ -1,3 +1,4 @@
+import enum
 import logging
 from datetime import timedelta
 from typing import Optional
@@ -22,7 +23,6 @@ from .coordinator import ThermostatCoordinator
 from .utils import get_todays_midnight
 
 _LOGGER = logging.getLogger(__name__)
-# Time between updating data from GitHub
 SCAN_INTERVAL = timedelta(minutes=5)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -48,20 +48,25 @@ async def async_setup_entry(
     for thermostat in coordinator.api.thermostats:
         async_add_entities(
             [
-                ThermostatDailyUsageSensor(
+                ThermostatSensor(
                     coordinator,
                     thermostat,
                 ),
             ]
         )
 
-class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
+class ThermostatSensor(CoordinatorEntity, SensorEntity):
     """Representation of a sensor."""
+    class EnergyType(enum):
+        DAY = 1
+        WEEK = 2
+        MONTH = 3
 
     def __init__(
         self,
         coordinator,
         thermostat,
+        energy_type
     ):
         """Pass coordinator to CoordinatorEntity."""
         super().__init__(coordinator)
@@ -71,12 +76,13 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
         self._attr_icon = "mdi:lightning-bolt"
         self._attr_state_class = SensorStateClass.TOTAL
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
-        self._attr_name = f"{thermostat.room} Energy Used Today"
         self._attr_device_class = SensorDeviceClass.ENERGY
         self._attr_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
         self._attr_suggested_display_precision = 2
         self._attr_available = True
-        self._attr_state = self.calculate_energy_usage()
+
+        self._attr_name = self._get_name(energy_type)
+        self._attr_state = self._calculate_energy_usage(energy_type)
 
     @property
     def device_info(self):
@@ -93,9 +99,31 @@ class ThermostatDailyUsageSensor(CoordinatorEntity, SensorEntity):
     def state(self) -> Optional[str]:
         return self.calculate_energy_usage()
 
-    def calculate_energy_usage(self):
+    def _calculate_energy_usage(self, energy_type):
+        number_of_days = 1
+        match energy_type:
+            case ThermostatSensor.EnergyType.DAY:
+                number_of_days = 1
+            case ThermostatSensor.EnergyType.WEEK:
+                number_of_days = 7
+            case ThermostatSensor.EnergyType.MONTH:
+                number_of_days = 30
+
         energy_usage_total = 0
-        for usage in self.thermostat.energy_usage:
+        for index in range(0, number_of_days):
+            if index >= len(self.thermostat.energy_usage):
+                break
+            usage = self.thermostat.energy_usage[index]
             energy_usage_total += usage.energy_in_kwh
+
         return energy_usage_total
-    
+
+    def _get_name(self, energy_type):
+        name = self.thermostat.room
+        match energy_type:
+            case ThermostatSensor.EnergyType.DAY:
+                name += " Energy Used Today"
+            case ThermostatSensor.EnergyType.WEEK:
+                name += " Energy Used Last 7 Days"
+            case ThermostatSensor.EnergyType.MONTH:
+                name += " Energy Used Last 30 Days"
